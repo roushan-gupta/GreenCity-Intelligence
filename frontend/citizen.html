@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Citizen Dashboard</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
+    <style>
+      .profile-dropdown {
+        position: relative;
+        display: inline-block;
+      }
+      .profile-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: white;
+        color: #198754;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        cursor: pointer;
+        border: 2px solid white;
+      }
+      .profile-icon:hover {
+        background-color: #f8f9fa;
+      }
+      .dropdown-menu-custom {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: 50px;
+        background-color: white;
+        min-width: 200px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        z-index: 1000;
+        overflow: hidden;
+      }
+      .dropdown-menu-custom.show {
+        display: block;
+      }
+      .dropdown-item-custom {
+        padding: 12px 20px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: background-color 0.2s;
+        border: none;
+        width: 100%;
+        text-align: left;
+        background: none;
+        color: #333;
+      }
+      .dropdown-item-custom:hover {
+        background-color: #f8f9fa;
+      }
+      .dropdown-item-custom i {
+        width: 20px;
+      }
+      .section-content {
+        display: none;
+      }
+      .section-content.active {
+        display: block;
+      }
+      .notification-badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background-color: #dc3545;
+        color: white;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body class="bg-light">
+    <nav class="navbar navbar-dark bg-success px-3">
+      <span class="navbar-brand">Citizen Dashboard</span>
+      <div class="profile-dropdown">
+        <div class="profile-icon" onclick="toggleDropdown()" style="position: relative;">
+          <i class="bi bi-person-circle"></i>
+          <span id="notificationBadge" class="notification-badge" style="display: none;">0</span>
+        </div>
+        <div id="profileDropdown" class="dropdown-menu-custom">
+          <button class="dropdown-item-custom" onclick="showSection('profile')">
+            <i class="bi bi-person"></i> Profile
+          </button>
+          <button class="dropdown-item-custom" onclick="showSection('notifications')" style="position: relative;">
+            <i class="bi bi-bell"></i> Notifications
+            <span id="dropdownNotificationBadge" class="badge bg-danger ms-auto" style="display: none;">0</span>
+          </button>
+          <hr class="my-1" />
+          <button class="dropdown-item-custom text-danger" onclick="logout()">
+            <i class="bi bi-box-arrow-right"></i> Logout
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-4">
+      <!-- Dashboard Home (Report Incident Form) -->
+      <div id="dashboardSection" class="section-content active">
+        <h4 id="welcome"></h4>
+        <hr />
+
+        <!-- Report Incident -->
+        <div class="card p-3 mb-4">
+          <h5>Report Pollution Incident</h5>
+
+          <button class="btn btn-outline-primary mb-2" onclick="selectLocation()">
+            📍 Select Current Location
+          </button>
+
+          <div id="locationText" class="text-muted p-2 mb-3" style="white-space: pre-line; border-radius: 5px;">📌 Location not selected</div>
+
+          <input
+            type="text"
+            id="incident_type"
+            class="form-control mb-2"
+            placeholder="Incident type (Garbage Burning, Smoke, Dust)"
+          />
+
+          <textarea
+            id="description"
+            class="form-control mb-2"
+            placeholder="Description"
+            rows="4"
+          ></textarea>
+
+          <input type="file" id="image" class="form-control mb-3" accept="image/*" />
+
+          <button class="btn btn-danger" onclick="reportIncident()">
+            Submit Incident
+          </button>
+
+          <p id="msg" class="mt-2 text-success"></p>
+        </div>
+      </div>
+
+      <!-- Profile Section -->
+      <div id="profileSection" class="section-content">
+        <button class="btn btn-outline-secondary mb-3" onclick="showSection('dashboard')">
+          <i class="bi bi-arrow-left"></i> Back to Dashboard
+        </button>
+        <div class="card p-4">
+          <h4><i class="bi bi-person-circle"></i> My Profile</h4>
+          <hr />
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label"><strong>Name:</strong></label>
+              <input id="profileNameInput" class="form-control" type="text" />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label"><strong>Email:</strong></label>
+              <input id="profileEmailInput" class="form-control" type="email" readonly />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label"><strong>Contact Number:</strong></label>
+              <input id="profileContactInput" class="form-control" type="text" />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label"><strong>House/Flat No.:</strong></label>
+              <input id="profileHouseInput" class="form-control" type="text" />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label"><strong>Street/Area:</strong></label>
+              <input id="profileStreetInput" class="form-control" type="text" />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label"><strong>District/City:</strong></label>
+              <input id="profileCityInput" class="form-control" type="text" />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label"><strong>State:</strong></label>
+              <input id="profileStateInput" class="form-control" type="text" />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label"><strong>Pincode:</strong></label>
+              <input id="profilePincodeInput" class="form-control" type="text" />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label"><strong>Role:</strong></label>
+              <input id="profileRoleInput" class="form-control" type="text" readonly />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label"><strong>User ID:</strong></label>
+              <input id="profileUserIdInput" class="form-control" type="text" readonly />
+            </div>
+          </div>
+          <button class="btn btn-success" onclick="saveProfile()">Save Profile</button>
+          <p id="profileSaveMsg" class="mt-2"></p>
+        </div>
+      </div>
+
+      <!-- Notifications Section -->
+      <div id="notificationsSection" class="section-content">
+        <button class="btn btn-outline-secondary mb-3" onclick="showSection('dashboard')">
+          <i class="bi bi-arrow-left"></i> Back to Dashboard
+        </button>
+        <div class="card p-4">
+          <h4><i class="bi bi-bell"></i> Notifications</h4>
+          <hr />
+          <ul id="notifications" class="list-group"></ul>
+          <p id="noNotifications" class="text-muted text-center mt-3" style="display: none;">No notifications yet</p>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/citizen.js"></script>
+  </body>
+</html>

@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+
+# Environment files (secrets)
+.env
+backend/.env
+
+# Uploads and local artifacts
+backend/uploads/
