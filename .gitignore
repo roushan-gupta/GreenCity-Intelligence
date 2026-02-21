@@ -12,3 +12,5 @@ backend/.env
 
 # Uploads and local artifacts
 backend/uploads/
+
+GCI.docx
