@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from db import get_db_connection
-from ml.predict import predict_next_day
+from backend.ml.predict import predict_next_day
 
 aqi_bp = Blueprint("aqi", __name__)
 
