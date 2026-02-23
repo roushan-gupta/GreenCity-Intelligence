@@ -19,6 +19,7 @@ app.config['MAIL_USE_TLS'] = config.MAIL_USE_TLS
 app.config['MAIL_USERNAME'] = config.MAIL_USERNAME
 app.config['MAIL_PASSWORD'] = config.MAIL_PASSWORD
 app.config['MAIL_DEFAULT_SENDER'] = config.MAIL_DEFAULT_SENDER
+app.config["JSON_SORT_KEYS"] = False
 
 mail = Mail(app)
 
@@ -60,7 +61,6 @@ def test_db():
         return str(e)
 
 if __name__ == "__main__":
-    app.run(debug=True)
-    
-app = Flask(__name__)
-app.config["JSON_SORT_KEYS"] = False
+    import os
+    port=int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
