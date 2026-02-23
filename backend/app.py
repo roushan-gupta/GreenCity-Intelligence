@@ -61,3 +61,6 @@ def test_db():
 
 if __name__ == "__main__":
     app.run(debug=True)
+    
+app = Flask(__name__)
+app.config["JSON_SORT_KEYS"] = False
